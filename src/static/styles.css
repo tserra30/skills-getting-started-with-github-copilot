@@ -86,7 +86,6 @@ section h3 {
 
 .form-group input,
 .form-group select {
-  width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -141,4 +140,53 @@ footer {
   margin-top: 30px;
   padding: 20px;
   color: #666;
+}
+
+/* Add participants styling */
+.participants-section {
+  margin-top: 8px;
+  padding: 10px;
+  background-color: #f1f5ff;
+  border: 1px solid #e0e7ff;
+  border-radius: 6px;
+  display: block;
+}
+
+.participants-heading {
+  margin: 0 0 6px 0;
+  color: #1f2a44;
+}
+
+.participants-list {
+  margin: 0;
+  padding-left: 0;
+  list-style-type: none;
+}
+
+.participants-list li {
+  margin: 2px 0;
+  color: #334155;
+}
+
+.participant-item {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.15em 0;
+}
+
+.delete-participant {
+  margin-left: auto;
+  border: none;
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.delete-participant:hover {
+  background: #fecaca;
 }
