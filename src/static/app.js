@@ -19,19 +19,33 @@ document.addEventListener("DOMContentLoaded", () => {
         activityCard.className = "activity-card";
 
         const spotsLeft = details.max_participants - details.participants.length;
-        const participantsList = details.participants
-          .map((participant) => `<li>${participant}</li>`)
-          .join("");
+
+        // Build participants list with delete icon
+        let participantsList = "";
+        if (details.participants.length > 0) {
+          details.participants.forEach((participant) => {
+            participantsList += `
+              <li class="participant-item">
+                <span>${participant}</span>
+                <button class="delete-participant" type="button" data-activity="${encodeURIComponent(name)}" data-email="${encodeURIComponent(participant)}" title="Remove participant">
+                  🗑️ Remove
+                </button>
+              </li>
+            `;
+          });
+        } else {
+          participantsList = '<li style="list-style: none;"><em>No participants yet</em></li>';
+        }
 
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
-          <div class="participants-section" style="margin-top: 0.5rem; padding: 0.5rem; background: #f7f9fc; border-radius: 8px;">
-            <p style="margin: 0 0 0.25rem;"><strong>Participants:</strong></p>
-            <ul class="participants-list" style="margin: 0; padding-left: 1.25rem; list-style-type: disc;">
-              ${participantsList || "<li><em>No participants yet</em></li>"}
+          <div class="participants-section">
+            <p class="participants-heading"><strong>Participants (${details.participants.length}):</strong></p>
+            <ul class="participants-list">
+              ${participantsList}
             </ul>
           </div>
         `;
@@ -43,6 +57,42 @@ document.addEventListener("DOMContentLoaded", () => {
         option.value = name;
         option.textContent = name;
         activitySelect.appendChild(option);
+      });
+
+      // Add event listeners for delete icons
+      document.querySelectorAll(".delete-participant").forEach((icon) => {
+        icon.addEventListener("click", async (e) => {
+          const activity = icon.getAttribute("data-activity");
+          const email = icon.getAttribute("data-email");
+          if (!activity || !email) return;
+          if (!confirm(`Remove ${decodeURIComponent(email)} from ${decodeURIComponent(activity)}?`)) return;
+          try {
+            const response = await fetch(`/activities/${activity}/participants/${email}`, {
+              method: "DELETE",
+            });
+            const result = await response.json();
+            if (response.ok) {
+              messageDiv.textContent = result.message;
+              messageDiv.className = "success";
+              messageDiv.classList.remove("hidden");
+              fetchActivities();
+            } else {
+              messageDiv.textContent = result.detail || "Failed to remove participant.";
+              messageDiv.className = "error";
+              messageDiv.classList.remove("hidden");
+            }
+            setTimeout(() => {
+              messageDiv.classList.add("hidden");
+            }, 5000);
+          } catch (err) {
+            messageDiv.textContent = "Error removing participant.";
+            messageDiv.className = "error";
+            messageDiv.classList.remove("hidden");
+            setTimeout(() => {
+              messageDiv.classList.add("hidden");
+            }, 5000);
+          }
+        });
       });
     } catch (error) {
       activitiesList.innerHTML = "<p>Failed to load activities. Please try again later.</p>";
