@@ -142,3 +142,23 @@ footer {
   padding: 20px;
   color: #666;
 }
+
+/* Add participants styling */
+.participants-section {
+  margin-top: 8px;
+  padding: 10px;
+  background-color: #f1f5ff;
+  border: 1px solid #e0e7ff;
+  border-radius: 6px;
+}
+
+.participants-list {
+  margin: 0;
+  padding-left: 20px;
+  list-style: disc;
+}
+
+.participants-list li {
+  margin: 2px 0;
+  color: #334155;
+}
